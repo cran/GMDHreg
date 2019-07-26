@@ -20,20 +20,18 @@
 #' x <- x[-c(1:10), ]
 #' y <- y[-c(1:10)]
 #'
-#' mod <- gmdh.combi(X = x, y = y)
+#' mod <- gmdh.combi(X = x, y = y, criteria = "PRESS")
 #' pred <- predict(mod, x.test)
 #' summary(sqrt((pred - y.test)^2))
 #'
 #' @export
 #'
-
 predict.combi <- function(object, newdata, ...) {
 
-  regressors.fin <- rownames(object$results$coef)
+  try(na.fail(newdata))
 
-  ifelse(ncol(newdata) == 1, return(cbind(Ind = 1, newdata) %*% object$results$coef),
-                           newdata <- cbind(Ind = 1, fun.poly(newdata, G = object$G))[, regressors.fin]
-  )
+  regressors.fin <- rownames(object$results$coef)
+  newdata <- cbind(Ind = 1, fun.poly(newdata, G = object$G))[, regressors.fin]
 
   return(newdata %*% object$results$coef)
 }

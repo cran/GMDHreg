@@ -10,11 +10,10 @@
 #'
 #' @keywords internal
 #'
-
 predict.svd <- function(object, newdata, ...) {
 
   regressors.fin <- rownames(object$coef)
-  newdata <- cbind(1, newdata[, regressors.fin])
+  newdata <- cbind("Ind" = 1, newdata)[, regressors.fin]
 
   return(newdata %*% object$coef)
 }

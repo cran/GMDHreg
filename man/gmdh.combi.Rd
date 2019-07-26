@@ -4,30 +4,47 @@
 \alias{gmdh.combi}
 \title{GMDH Combinatorial}
 \usage{
-gmdh.combi(X, y, G = 2)
+gmdh.combi(X, y, G = 2, criteria = c("PRESS", "test", "ICOMP"),
+  x.test = NULL, y.test = NULL)
 }
 \arguments{
-\item{X}{matrix with N columns and M rows, containing independent variables in the model. N must be greater than 1.}
+\item{X}{matrix with N>1 columns and M rows, containing independent variables in the model. \cr
+Be careful, N>4 and G=2, could be computationally very expensive and time consuming. \cr
+The data must not contain NAs}
 
-\item{y}{vector or matrix containing dependent variable in the model.}
+\item{y}{vector or matrix containing dependent variable in the model. \cr
+The data must not contain NAs}
 
-\item{G}{polynomial degree. Default is 2, original Ivakhnenko quadratic polynomial. \cr
+\item{G}{polynomial degree. \cr
 0: linear regression without quadratic and interactrion terms. \cr
-1: only interaction terms. \cr}
+1: linear regression with interaction terms. \cr
+2: original Ivakhnenko quadratic polynomial.}
+
+\item{criteria}{GMDH external criteria. Values: \cr
+\itemize{
+ \item PRESS: Predicted Residual Error Sum of Squares. It take into account all information in data sample and it is computed without recalculating of system for each test point.\cr
+ \item test: use x.test and y.test to estimate RMSE (Root Mean Squeare Errors). \cr
+ \item ICOMP: Index of Informational Complexity. Like PRESS, it is computed without recalculating of system.
+}}
+
+\item{x.test}{matrix with a sample randomly drawn from the initial data. This sample should not be included in X. \cr
+It is used when criteria = test. \cr}
+
+\item{y.test}{vector or matrix with y values correspond with x.test values.}
 }
 \value{
-An object of class 'combi'. This is a list with two elements: results and G \cr
-    results is a list with two elements: \cr
+An object of class 'combi'. This is a list with two elements: results and G. \cr
+    Results is a list with two elements: \cr
     \itemize{
       \item coef: coeficients of final selected GMDH Combinatorial model.
-      \item CV: PRESS criteria value for selected model.
+      \item CV: external criteria value for selected model.
       }
 
 G the grade of polynomial used in GMDH Combinatorial model.
 }
 \description{
-Performs GMDH Combinatorial with PRESS like selection criteria. \cr
-Be careful with input matrix, more than four regressors could be computationally very expensive and time consuming.
+Build a regression model performing GMDH Combinatorial. \cr
+This is the basic GMDH algorithm. For more information, please read the package's vignette.
 }
 \examples{
 set.seed(123)
@@ -40,11 +57,15 @@ y.test <- y[1:10]
 x <- x[-c(1:10), ]
 y <- y[-c(1:10)]
 
-mod <- gmdh.combi(X = x, y = y)
+mod <- gmdh.combi(X = x, y = y, criteria = "PRESS")
 pred <- predict(mod, x.test)
 summary(sqrt((pred - y.test)^2))
 
 }
 \references{
+Bozdogan, H. and Haughton, D.M.A. (1998): "Information complexity criteria for regression models", Computational Statistics & Data Analysis, 28, pp. 51-76 <doi: 10.1016/S0167-9473(98)00025-5> \cr
+
+Hild, Ch. R. and Bozdogan, H. (1995): "The use of information-based model selection criteria in the GMDH algorithm", Systems Analysis Modelling Simulation, 20(1-2), pp. 29-50 \cr
+
 Ivakhnenko A.G. (1968): "The Group Method of Data Handling - A Rival of the Method of Stochastic Approximation", Soviet Automatic Control, 13(3), pp. 43-55
 }

@@ -1,7 +1,7 @@
-#' @title GMDH Combinatorial
+#' @title GMDH Twice-Multilayered Combinatorial
 #'
-#' @description Build a regression model performing GMDH Combinatorial. \cr
-#' This is the basic GMDH algorithm. For more information, please read the package's vignette.
+#' @description Build a regression model performing GMDH Twice-Multilayered Combinatorial (TMC). \cr
+#' For more information, please read the package's vignette.
 #'
 #' @param X matrix with N>1 columns and M rows, containing independent variables in the model. \cr
 #' Be careful, N>4 and G=2, could be computationally very expensive and time consuming. \cr
@@ -12,6 +12,7 @@
 #'     0: linear regression without quadratic and interactrion terms. \cr
 #'     1: linear regression with interaction terms. \cr
 #'     2: original Ivakhnenko quadratic polynomial.
+#'
 #' @param criteria GMDH external criteria. Values: \cr
 #'      \itemize{
 #'       \item PRESS: Predicted Residual Error Sum of Squares. It take into account all information in data sample and it is computed without recalculating of system for each test point.\cr
@@ -22,7 +23,7 @@
 #'    It is used when criteria = test. \cr
 #' @param y.test vector or matrix with y values correspond with x.test values.
 #'
-#' @return An object of class 'combi'. This is a list with two elements: results and G. \cr
+#' @return An object of class 'combitwice'. This is a list with two elements: results and G \cr
 #'     Results is a list with two elements: \cr
 #'     \itemize{
 #'       \item coef: coeficients of final selected GMDH Combinatorial model.
@@ -42,7 +43,7 @@
 #' x <- x[-c(1:10), ]
 #' y <- y[-c(1:10)]
 #'
-#' mod <- gmdh.combi(X = x, y = y, criteria = "PRESS")
+#' mod <- gmdh.combi.twice(X = x, y = y, criteria = "PRESS")
 #' pred <- predict(mod, x.test)
 #' summary(sqrt((pred - y.test)^2))
 #'
@@ -53,13 +54,11 @@
 #'
 #' Ivakhnenko A.G. (1968): "The Group Method of Data Handling - A Rival of the Method of Stochastic Approximation", Soviet Automatic Control, 13(3), pp. 43-55
 #'
-#' @importFrom stats na.omit na.fail predict
-#'
-#' @importFrom utils combn
+#' @importFrom stats na.omit predict
 #'
 #' @export
 #'
-gmdh.combi <- function(X, y, G = 2, criteria = c("PRESS", "test", "ICOMP"), x.test = NULL, y.test = NULL) {
+gmdh.combi.twice <- function(X, y, criteria = c("PRESS", "test", "ICOMP"), G = 2, x.test = NULL, y.test = NULL) {
 
   ifelse(is.matrix(X), NA, return(message("X must be a matrix")))
   ifelse(ncol(X) >= 2, NA, return(message("GMDH Combinatorial needs more than 1 regressor")))
@@ -68,8 +67,8 @@ gmdh.combi <- function(X, y, G = 2, criteria = c("PRESS", "test", "ICOMP"), x.te
   try(na.fail(y))
 
   switch(criteria,
-         PRESS = return(gmdh.combi_1(X = X, y = y, G = G)),
-         test = return(gmdh.combi_2(X= X, y = y, G = G, x.test = x.test, y.test = y.test)),
-         ICOMP = return(gmdh.combi_3(X= X, y = y, G = G))
+         PRESS = return(gmdh.combi.twice_1(X = X, y = y, G = G)),
+         test = return(gmdh.combi.twice_2(X= X, y = y, G = G, x.test = x.test, y.test = y.test)),
+         ICOMP = return(gmdh.combi.twice_3(X= X, y = y, G = G))
   )
 }

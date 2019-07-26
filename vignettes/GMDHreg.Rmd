@@ -1,0 +1,116 @@
+---
+title: "GMDHreg: an R Package for GMDH Regression"
+author: "Manuel Villacorta Tilve"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{GMDHreg: an R Package for GMDH Regression}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+# Introduction.
+GMDH (Group Method of Data Handling) was originated in 1968 by Prof. Alexey G. Ivakhnenko in the Institute of Cybernetics in Kiev.
+
+GMDHreg has been designed for regression analysis. For this porpouse, it includes the next algorithms: Combinatorial, MIA (Multilayered Iterative Algorithm), Combinatorial with Active Neurons, and GIA (Generalized Iterative Algorithm).
+
+Following a heuristic and Perceptron type approach, Ivakhnenko attempted to resemble the Kolmogorov-Gabor polynomial by using low order polynomials. GMDH performs sorting-out of gradually complicated polynomial models and selecting the best solution using so called *external criteria*. So that, GMDH algorithms give us the possibility to find automatically interrelations in data, to select an optimal structure of model or network, by means of this external criteria.
+
+To estimate the polynomials coefficients, it is used the least squares method. In this aspect, GMDHreg employs Singular Value Decomposition (SVD) to avoid singularities.
+
+## External Criteria.
+
+It is one of the key features of GMDH, describing some requirements to the model, like the optimal structure. It is always calculated with a separate part of data that have not been used for estimation of polynomial coefficients. GMDHreg give us three possibilities:
+
+* PRESS: *Predicted Residual Error Sum of Squares.* It take into account all information in data sample and it is computed without recalculating of system for each test point.
+* test: It is the classical aproach, dividing initial data in training and testing subsamples. The training subsample is used to derive estimates for the coefficients of the polynomials, and the test subsample is used to choose the structure of the optimal model.
+* ICOMP: *Index of Informational Complexity.* Like PRESS, it is computed without recalculating of system.
+
+# GMDH Combinatorial (GMDH-COMBI).
+This is the basic GMDH algorithm. It uses an input data sample containing $N$ rows of observations and $M$ predictor variables.
+
+This algorithm generates models of all possible input variable combinations and selects a final best model from the generated set of models according to a chosen selection criterion. The coefficients $\beta_i$ of these models are determined by linear regression and are unique for each neuron.
+
+Be careful with this. At GMDHreg, if you select original Ivakhnenko quadratic polynomial (G = 2) and $M > 4$, the computational time could be very expensive, even the algorithm could never be calculated.  For $M'$ input variables, GMDH Combinatorial generate $2^{(M'-1)}$ models (e.g. $M = 5 => M' = 20$ then you have $2^{19}$ models to estimate).
+
+Suposse you have two variables $x_1$ $x_2$ and a response $y$. The models to estimate are $2^5$:
+
+$y = \beta_{0} + \beta_{1}x_{1}$
+
+$y = \beta_{0} + \beta_{1}x_{2}$
+
+$...$
+
+$y = \beta_{0} + \beta_{1}x_{1} + \beta_{2}x_{2} + \beta_{3}x_{1}^2 + \beta_{4}x_{2}^2 + \beta_{5}x_{1}x_{2}$
+
+Once all these models are estimated, the one with the best external criteria is selected.
+
+```
+data(airquality)
+
+# Remove NAs
+BD <- airquality[complete.cases(airquality), ]
+
+y <- matrix(data = BD[, "Ozone"], ncol = 1)
+x <- as.matrix(BD[, c("Solar.R", "Wind", "Temp")])
+
+# Select the training and testing set
+set.seed(123)
+sel <- sample(1:nrow(x), size = 100)
+
+x.train <- x[sel, ]
+y.train <- y[sel, ]
+x.val <- x[-sel, ]
+y.val <- y[-sel, ]
+
+# Fitting a simple linear regression for benchmark proposes
+mod.lm <- lm(y.train ~., data = as.data.frame(x.train))
+fit.lm <- predict(mod.lm, as.data.frame(x.val))
+error.lm <- summary(abs(fit.lm - y.val) / y.val)
+
+mod.combi <- gmdh.combi(X = x.train, y = y.train, criteria = "PRESS", G = 2)
+fit.combi <- predict(mod.combi, x.val)
+error.combi <- summary(abs(fit.combi - y.val) / y.val)
+
+```
+
+# GMDH Combinatorial with Active Neurons. GMDH Twice-Multilayered Combinatorial (GMDH-TMC).
+It is an extension of Combinatorial algorithm. It constructs the first layer of neurons in the network like GMDH-COMBI. Then, the algorithm determines how accurate the predictions will be for all neurons.
+
+At a second stage, with $M_2$ best neurons as regressors, GMDH-TMC repeats the proces for a second, a third,... {i} layer, as long as this decreases external criteria value.
+
+At GMDHreg, $M_i = M$, and it does not implement the orginal idea of Ivakhnenko who introduces a feed-forward system. Note that this is computationally very expensive, especially if G = 2.
+
+```
+mod.combi.twice <- gmdh.combi.twice(X = x.train, y = y.train, criteria = "PRESS", G = 2)
+fit.combi.twice <- predict(mod.combi.twice, x.val)
+error.combi.twice <- summary(abs(fit.combi.twice - y.val) / y.val)
+
+```
+
+# GMDH Multilayered Iterative Algorithm (GMDH-MIA).
+The basis of GMDH-MIA is that each neuron in the network receives input from exactly two other neurons, except neurons at input layer. The two inputs are then combined to produce a partial descriptor based on the simple quadratic transfer function (a quadratic polynomial):
+
+$y_{i} = \beta_{0} + \beta_{1}x_{1,i} + \beta_{2}x_{2,i} + \beta_{3}x_{1,i}^2 + \beta_{4}x_{2,i}^2 + \beta_{5}x_{1,i}x_{2,i}$
+
+where coefficients $\beta_i$ are determined by linear regression and are unique for each neuron.
+
+The network of polynomials is constructed one layer at a time. The first network layer consists of the functions of each possible pair of $n$ input variables  resulting in $n(n−1)/2$ neurons. The second layer is created using inputs from the first layer and so on.
+
+Due to the exponential neurons growth, after finishing the layer, a limited number of best neurons is selected and the other neurons are removed from the network. GMDH-MIA repeat the proces for third, fourth,... layer, as long as decreases external criterion value.
+
+```
+mod.mia <- gmdh.mia(X = x.train, y = y.train, prune = 150, criteria = "PRESS")
+fit.mia <- predict(mod.mia, x.val)
+error.mia <- summary(abs(fit.mia - y.val) / y.val)
+
+```
+# GMDH Generalized Iterative Algorithm (GMDH-GIA).
+This algorithm is similar to GMDH-MIA, but (1) each neuron is an active unit, its output is automatically selected thanks to GMDH-COMBI and, (2) GMDH-GIA works with a feed-forward system, where initial regressors are used at all layers to avoid information lose.
+
+```
+mod.gia <- gmdh.gia(X = x.train, y = y.train, prune = 10, criteria = "PRESS")
+fit.gia <- predict(mod.gia, x.val)
+error.gia <- summary(abs(fit.gia - y.val) / y.val)
+
+```

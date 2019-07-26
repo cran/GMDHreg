@@ -7,16 +7,18 @@
 #'
 #' @keywords internal
 #'
-
-fun.svd <- function(x, y) {
+fun.svd_1 <- function(x, y) {
 
   nombres <- colnames(x)
   resultado <- vector(mode = "list", length = 2)
   names(resultado) <- c("coef", "CV")
   x <- cbind(1, x)
+  tol <- sqrt(.Machine$double.eps)
 
   Xsvd <- svd(x)
-  C <- Xsvd$v %*% (crossprod(Xsvd$u, y) / Xsvd$d)
+  D <- 1 / Xsvd$d
+  D[which(D < tol)] <- 0
+  C <- Xsvd$v %*% (crossprod(Xsvd$u, y) * D)
   err <- (x %*% C) - y
   rownames(C) <- c("Ind", nombres)
   CV <- sqrt(mean((err / (1 - rowSums(Xsvd$u * Xsvd$u)))^2))
@@ -24,5 +26,7 @@ fun.svd <- function(x, y) {
   resultado$coef <- C
   resultado$CV <- CV
   class(resultado) <- "svd"
+  rm(list = c("nombres", "x", "y", "Xsvd", "C", "err", "CV"))
+
   return(resultado)
 }

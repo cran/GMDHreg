@@ -1,6 +1,6 @@
-#' @title GMDH MIA
+#' @title GMDH GIA
 #'
-#' @description Build a regression model performing GMDH MIA (Multilayered Iterative Algorithm). \cr
+#' @description Build a regression model performing GMDH GIA (Generalized Iterative Algorithm) with Active Neurons (Combinatorial algorithm). \cr
 #' For more information, please read the package's vignette.
 #'
 #' @param X matrix with N>3 columns and M rows, containing independent variables in the model. \cr
@@ -12,8 +12,8 @@
 #'    Prune is the selected number of neurons from layer i to layer i+1. The resulting layer i+1 has prune(prune-1)/2 neurons; for example with prune=150, the resulting nerurons will be 11.175
 #' @param criteria GMDH external criteria. Values: \cr
 #'      \itemize{
-#'       \item PRESS: Predicted Residual Error Sum of Squares. It take into account all information in data sample and it is computed without recalculating of system for each test point.\cr
-#'       \item test: use x.test and y.test to estimate RMSE (Root Mean Squeare Errors). \cr
+#'       \item PRESS: predicted residual error sum of squares. \cr
+#'       \item test: use x.test and y.test to estimate RMSE (root mean squeare errors). \cr
 #'       \item ICOMP: Index of Informational Complexity. Like PRESS, it is computed without recalculating of system.
 #'      }
 #' @param x.test matrix with a sample randomly drawn from the initial data. \cr
@@ -21,7 +21,7 @@
 #'    This sample should not be included in X.
 #' @param y.test vector or matrix with y values correspond with x.test values.
 #'
-#' @return An object of class mia.
+#' @return An object of class gia.
 #'
 #' @examples
 #' set.seed(123)
@@ -35,7 +35,7 @@
 #' x <- x[-c(1:10), ]
 #' y <- y[-c(1:10)]
 #'
-#' mod <- gmdh.mia(X = x, y = y, prune = 5, criteria = "PRESS")
+#' mod <- gmdh.gia(X = x, y = y, prune = 5, criteria = "PRESS")
 #' pred <- predict(mod, x.test)
 #' summary(sqrt((pred - y.test)^2))
 #'
@@ -46,7 +46,9 @@
 #'
 #' Hild, Ch. R. and Bozdogan, H. (1995): "The use of information-based model selection criteria in the GMDH algorithm", Systems Analysis Modelling Simulation, 20(1-2), pp. 29-50 \cr
 #'
-#' Ivakhnenko A.G. (1968): "The Group Method of Data Handling - A Rival of the Method of Stochastic Approximation", Soviet Automatic Control, 13(3), pp. 43-55
+#' Ivakhnenko A.G. (1968): "The Group Method of Data Handling - A Rival of the Method of Stochastic Approximation", Soviet Automatic Control, 13(3), pp. 43-55 \cr
+#'
+#' Stepashko, V. Bulgakova, O. and Zosimov V. (2018): "Construction and Research of the Generalized Iterative GMDH Algorithm with Active Neurons", Advances in Intelligent Systems and Computing II, pp. 492-510 <doi:10.1007/978-3-319-70581-1_35>
 #'
 #' @importFrom stats na.omit na.fail predict
 #'
@@ -54,11 +56,11 @@
 #'
 #' @export
 #'
-gmdh.mia <- function(X, y, prune = 150, criteria = c("PRESS", "test", "ICOMP"), x.test = NULL, y.test = NULL) {
+gmdh.gia <- function(X, y, prune = 40, criteria = c("PRESS", "test", "ICOMP"), x.test = NULL, y.test = NULL) {
 
   switch(criteria,
-         PRESS = return(gmdh.mia_1(X = X, y = y, prune = prune)),
-         test = return(gmdh.mia_2(X= X, y = y, prune = prune, x.test = x.test, y.test = y.test)),
-         ICOMP = return(gmdh.mia_3(X= X, y = y, prune = prune))
+         PRESS = return(gmdh.gia_1(X = X, y = y, prune = prune)),
+         test = return(gmdh.gia_2(X= X, y = y, prune = prune, x.test = x.test, y.test = y.test)),
+         ICOMP = return(gmdh.gia_3(X= X, y = y, prune = prune))
   )
 }

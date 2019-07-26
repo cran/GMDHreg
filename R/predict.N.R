@@ -12,7 +12,6 @@
 #' @keywords internal
 #'
 #'
-
 predict.neurona <- function(object, newdata, ...) {
 
   regressors.fin <- rownames(object$coef)[c(2, 3)]

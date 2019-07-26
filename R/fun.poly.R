@@ -11,7 +11,6 @@
 #'
 #' @keywords internal
 #'
-
 fun.poly <- function(X, G = 2) {
 
   ifelse(G == 0, return(X), NA)

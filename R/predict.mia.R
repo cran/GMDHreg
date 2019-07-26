@@ -20,19 +20,37 @@
 #' x <- x[-c(1:10), ]
 #' y <- y[-c(1:10)]
 #'
-#' mod <- gmdh.mia(X = x, y = y, prune = 5)
+#' mod <- gmdh.mia(X = x, y = y, prune = 5, criteria = "PRESS")
 #' pred <- predict(mod, x.test)
 #' summary(sqrt((pred - y.test)^2))
 #'
 #' @export
 #'
-
 predict.mia <- function(object, newdata, ...) {
 
-  lon <- length(object)
+  try(na.fail(newdata))
 
-  ifelse(lon == 1,
-         return(fun.aux.1(object = object, newdata = newdata)),
-         return(fun.aux.2(object = object, newdata = newdata, lon = lon))
-  )
+  resultado <- vector(mode = "list", length = (length(object) - 1))
+  resultado[[1]] <- newdata
+  rm(newdata)
+
+  for (i in 1:length(resultado)) {
+
+    message(paste("Estimando capa ", i, sep = ""))
+
+    newdata <- vector(mode = "list", length = length(object[[i]]))
+    newdata <- lapply(newdata, function(x){x <- matrix(data = NA, ncol = 1, nrow = nrow(resultado[[1]]))})
+    data <- resultado[[i]]
+    for(j in 1:length(newdata)) newdata[[j]] <- predict.neurona(object[[i]][[j]], data)
+    newdata <- matrix(data = unlist(newdata), ncol = length(newdata))
+    colnames(newdata) <- names(object[[i]])
+    resultado[[(i + 1)]] <- newdata
+    rm(newdata)
+    rm(data)
+  }
+
+  CV <- which.min(unlist(lapply(object[[i]], function(x){x$CV})))
+
+  return(predict(object[[i]][[CV]], resultado[[i]]))
+
 }
