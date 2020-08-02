@@ -1,3 +1,7 @@
+# GMDHreg 0.2.1 August 2020
+## Minor Change:
+Fixed some bugs
+
 # GMDHreg 0.2.0 July 2019
 ## Major Changes:
 * Modified internal code to reduce running time

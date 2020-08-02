@@ -61,11 +61,16 @@
 #'
 gmdh.combi <- function(X, y, G = 2, criteria = c("PRESS", "test", "ICOMP"), x.test = NULL, y.test = NULL) {
 
-  ifelse(is.matrix(X), NA, return(message("X must be a matrix")))
-  ifelse(ncol(X) >= 2, NA, return(message("GMDH Combinatorial needs more than 1 regressor")))
-  #ifelse(ncol(X) <= 4 & G >= 1, NA, message("More than 4 regressors could be very computational expensive"))
-  try(na.fail(X))
-  try(na.fail(y))
+  if (is.matrix(X) != TRUE)
+    stop("X must be a matrix")
+  if(ncol(X) < 2)
+    stop("GMDH Combinatorial needs more than 1 regressor")
+  if(any(is.na(X)) != FALSE)
+    stop("X has NA values")
+  if(any(is.na(y)) != FALSE)
+    stop("y has NA values")
+  if((ncol(X) > 4) & (G > 0))
+    message("More than 4 regressors and G > 0 could be very computational expensive")
 
   switch(criteria,
          PRESS = return(gmdh.combi_1(X = X, y = y, G = G)),

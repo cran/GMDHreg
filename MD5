@@ -1,8 +1,8 @@
-30bdff1144790173c7ac61844bad2268 *DESCRIPTION
+3ea0cd27a0efb3def86f7679d8666d78 *DESCRIPTION
 c22cb0ecd4b3a593eddfcb3ebf76f400 *NAMESPACE
-652ca00946c139980313bdadb7eba9ed *NEWS.md
-47f0f5ce50cce9d34559fca9c067d5c3 *R/combi.R
-699c681e30f2a01c7e4cf5df2c9b8167 *R/combi.twice.R
+f5e770b651506b3e73ae4e64e74a2b21 *NEWS.md
+06965d3e493d5001691f487cedf7bd75 *R/combi.R
+d31a9904e70b8d7f6996fac547833dd3 *R/combi.twice.R
 6ce5c9ad66f7e1d4f206c80244badaab *R/combi.twice_1.R
 c8c442ae23dd97e23dafcdfeaf5722f9 *R/combi.twice_2.R
 55142ae6061519d6cb742638dd974224 *R/combi.twice_3.R
@@ -16,11 +16,11 @@ ae8043484af465016bc85d105ce4f2a9 *R/fun.N_2.R
 fda29b8e8212a09fc02936a4c20d9340 *R/fun.svd_1.R
 d5f61ab30d2d1a25add8975106393f03 *R/fun.svd_2.R
 150dcf3e5d64ba43ebdaf99449cbe40e *R/fun.svd_3.R
-8d079b34208699c993930f0b6ba5e6cd *R/gia.R
+0ee754190dbe7ba3820254379bafa503 *R/gia.R
 c1220aee679f3e909ac0bb3bdd02dd80 *R/gia_1.R
 1f352c9ea9e17787b31c7bef0cae0094 *R/gia_2.R
 6794e607bcee6674685caa338ae4439e *R/gia_3.R
-1425f05be426ce864914a2b3d3aed627 *R/mia.R
+f41abf5b6abd3684e17ca455fa8235a3 *R/mia.R
 e4f9d49f66bd5c5add72b75e04b47b44 *R/mia_1.R
 d3443eb7fff8c76cd93a24b96d4b0192 *R/mia_2.R
 abd7dad1fac95a8e35ac095cd53d5d5f *R/mia_3.R
@@ -33,7 +33,7 @@ ee11870084052412eda1612d30f86eef *R/predict.mia.R
 1f78ee32543496961574238baf74a7d7 *R/predict.svd.R
 311fbb4631beef36f392aca08f14e733 *build/vignette.rds
 70c36b024e91d47645434317fe7140f1 *inst/doc/GMDHreg.Rmd
-45a1343b73e9935fbb5c41f8a0a451fd *inst/doc/GMDHreg.html
+2376dff9a347b06ffb4c63e59fa3b82e *inst/doc/GMDHreg.html
 f964a8f06c46c580604a052e52f55fdf *man/fun.N_1.Rd
 4a6f1e955d8ee9aa94a6497795935748 *man/fun.N_2.Rd
 dbb63154f7e6e9ffa992d737212ec344 *man/fun.N_3.Rd

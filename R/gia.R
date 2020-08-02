@@ -58,6 +58,13 @@
 #'
 gmdh.gia <- function(X, y, prune = 40, criteria = c("PRESS", "test", "ICOMP"), x.test = NULL, y.test = NULL) {
 
+  if (is.matrix(X) != TRUE)
+    stop("X must be a matrix")
+  if(any(is.na(X)) != FALSE)
+    stop("X has NA values")
+  if(any(is.na(y)) != FALSE)
+    stop("y has NA values")
+
   switch(criteria,
          PRESS = return(gmdh.gia_1(X = X, y = y, prune = prune)),
          test = return(gmdh.gia_2(X= X, y = y, prune = prune, x.test = x.test, y.test = y.test)),

@@ -1,7 +1,7 @@
 Package: GMDHreg
 Type: Package
 Title: Regression using GMDH Algorithms
-Version: 0.2.0
+Version: 0.2.1
 Author: Manuel Villacorta Tilve
 Maintainer: Manuel Villacorta Tilve <mvt.oviedo@gmail.com>
 Description: Regression using GMDH algorithms from Prof. Alexey G. Ivakhnenko.
@@ -20,8 +20,8 @@ Depends: R (>= 2.15)
 Imports: stats, utils
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 NeedsCompilation: no
-Packaged: 2019-07-25 14:11:55 UTC; manuel
+Packaged: 2020-08-01 05:59:04 UTC; manuel
 Repository: CRAN
-Date/Publication: 2019-07-26 08:10:04 UTC
+Date/Publication: 2020-08-02 01:32:11 UTC

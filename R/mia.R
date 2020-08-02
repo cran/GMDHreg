@@ -56,6 +56,13 @@
 #'
 gmdh.mia <- function(X, y, prune = 150, criteria = c("PRESS", "test", "ICOMP"), x.test = NULL, y.test = NULL) {
 
+  if (is.matrix(X) != TRUE)
+    stop("X must be a matrix")
+  if(any(is.na(X)) != FALSE)
+    stop("X has NA values")
+  if(any(is.na(y)) != FALSE)
+    stop("y has NA values")
+
   switch(criteria,
          PRESS = return(gmdh.mia_1(X = X, y = y, prune = prune)),
          test = return(gmdh.mia_2(X= X, y = y, prune = prune, x.test = x.test, y.test = y.test)),
