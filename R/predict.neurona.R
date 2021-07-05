@@ -1,11 +1,13 @@
-#' @title GMDH MIA auxiliar functions
+#' @title Predict neurona object
 #'
-#' @description Performs auxiliar tasks to predict.mia
+#' @description Calculates neurona model predictions for new data.
 #'
-#' @examples NULL
+#' @param object An object model from mia an object class 'neurona'
+#' @param newdata matrix containing dependent variable in the model, wich the predictions are calculated.
+#'
+#' @return NULL
 #'
 #' @keywords internal
-#' @export
 #'
 predict.neurona <- function(object, newdata, ...) {
 

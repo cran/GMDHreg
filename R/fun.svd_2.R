@@ -18,12 +18,13 @@ fun.svd_2 <- function(x, y, x.test, y.test) {
 
   Xsvd <- svd(x)
   D <- 1 / Xsvd$d
-  D[which(D < tol)] <- 0
+  D[D <= tol] <- 0
   C <- Xsvd$v %*% (crossprod(Xsvd$u, y) * D)
   rownames(C) <- c("Ind", nombres)
 
   err <- x.test %*% C - y.test
   CV <- sqrt(mean(err^2))
+  CV <- round(CV, digits = 6)
 
   resultado$coef <- C
   resultado$CV <- CV

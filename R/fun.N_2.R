@@ -21,13 +21,13 @@ fun.N_2 <- function(x, y, x.test, y.test) {
 
   Xsvd <- svd(x)
   D <- 1 / Xsvd$d
-  D[which(D < tol)] <- 0
-
+  D[D <= tol] <- 0
   C <- Xsvd$v %*% (crossprod(Xsvd$u, y) * D)
-  err <- x.test %*% C - y.test
   rownames(C) <- c("Ind", nombres, paste0(nombres, "^2", sep = ""), "interac")
 
+  err <- x.test %*% C - y.test
   CV <- sqrt(mean(err^2))
+  CV <- round(CV, digits = 6)
 
   resultado$coef <- C
   resultado$CV <- CV

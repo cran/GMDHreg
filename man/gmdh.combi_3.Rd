@@ -7,6 +7,6 @@
 gmdh.combi_3(X, y, G = 2)
 }
 \description{
-Performs auxiliar tasks to predict.mia
+Build a regression model performing GMDH Combinatorial with ICOMP criteria.
 }
 \keyword{internal}

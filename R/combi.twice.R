@@ -52,7 +52,11 @@
 #'
 #' Hild, Ch. R. and Bozdogan, H. (1995): "The use of information-based model selection criteria in the GMDH algorithm", Systems Analysis Modelling Simulation, 20(1-2), pp. 29-50 \cr
 #'
-#' Ivakhnenko A.G. (1968): "The Group Method of Data Handling - A Rival of the Method of Stochastic Approximation", Soviet Automatic Control, 13(3), pp. 43-55
+#' Ivakhnenko, A.G., Ivakhnenko, G.A and Müller, J.-A. (1994): "Self-organization of Neural Networks with Active Neurons", Pattern Recognition and Image Analysis, 4(2), pp. 185-196 \cr
+#'
+#' Ivakhnenko, A.G. (1968): "The Group Method of Data Handling - A Rival of the Method of Stochastic Approximation", Soviet Automatic Control, 13(3), pp. 43-55 \cr
+#'
+#' Müller, J.-A., Ivachnenko, A.G. and Lemke, F. (1998): "GMDH Algorithms for Complex Systems Modelling", Mathematical and Computer Modelling of Dynamical Systems, 4(4), pp. 275-316 <doi: 10.1080/13873959808837083>
 #'
 #' @importFrom stats na.omit predict
 #'
@@ -62,6 +66,8 @@ gmdh.combi.twice <- function(X, y, criteria = c("PRESS", "test", "ICOMP"), G = 2
 
   if (is.matrix(X) != TRUE)
     stop("X must be a matrix")
+  if (is.null(colnames(X)) == TRUE)
+    stop("X matrix regressors must have names. Try colnames() function")
   if(ncol(X) < 2)
     stop("GMDH Combinatorial Twice needs more than 1 regressor")
   if(any(is.na(X)) != FALSE)

@@ -7,6 +7,6 @@
 gmdh.gia_2(X, y, prune, x.test, y.test)
 }
 \description{
-Performs auxiliar tasks to predict.mia
+Performs auxiliar tasks to predict.gia
 }
 \keyword{internal}

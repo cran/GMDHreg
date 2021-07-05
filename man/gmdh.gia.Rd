@@ -4,8 +4,14 @@
 \alias{gmdh.gia}
 \title{GMDH GIA}
 \usage{
-gmdh.gia(X, y, prune = 40, criteria = c("PRESS", "test", "ICOMP"),
-  x.test = NULL, y.test = NULL)
+gmdh.gia(
+  X,
+  y,
+  prune = ncol(X),
+  criteria = c("PRESS", "test", "ICOMP"),
+  x.test = NULL,
+  y.test = NULL
+)
 }
 \arguments{
 \item{X}{matrix with N>3 columns and M rows, containing independent variables in the model. \cr
@@ -15,7 +21,7 @@ The data must not contain NAs}
 The data must not contain NAs}
 
 \item{prune}{an integer whose recommended minimum value is the number of initial regressors. \cr
-The maximum value will depend on the available RAM. It is recommended to work with the maximum value, but it can be computationally very expensive. \cr
+The maximum value will depend on the available RAM. \cr
 Prune is the selected number of neurons from layer i to layer i+1. The resulting layer i+1 has prune(prune-1)/2 neurons; for example with prune=150, the resulting nerurons will be 11.175}
 
 \item{criteria}{GMDH external criteria. Values: \cr
@@ -39,17 +45,18 @@ Build a regression model performing GMDH GIA (Generalized Iterative Algorithm) w
 For more information, please read the package's vignette.
 }
 \examples{
-set.seed(123)
-x <- matrix(data = c(rnorm(1000)), ncol = 5, nrow = 200)
-colnames(x) <- c("a", "b", "c", "d", "e")
-y <- matrix(data = c(10 + x[, "a"] * x[, "e"]^3), ncol = 1)
-colnames(y) <- "y"
-x.test <- x[1:10, ]
-y.test <- y[1:10]
-x <- x[-c(1:10), ]
-y <- y[-c(1:10)]
 
-mod <- gmdh.gia(X = x, y = y, prune = 5, criteria = "PRESS")
+set.seed(123)
+x <- matrix(data = c(rnorm(500)), ncol = 4, nrow = 125)
+colnames(x) <- c("a", "b", "c", "d")
+y <- matrix(data = c(10 + x[, "a"] + x[, "d"]^2), ncol = 1)
+colnames(y) <- "y"
+x.test <- x[1:5, ]
+y.test <- y[1:5]
+x <- x[-c(1:5), ]
+y <- y[-c(1:5)]
+
+mod <- gmdh.gia(X = x, y = y, criteria = "PRESS")
 pred <- predict(mod, x.test)
 summary(sqrt((pred - y.test)^2))
 
@@ -57,11 +64,13 @@ summary(sqrt((pred - y.test)^2))
 \references{
 Bozdogan, H. and Haughton, D.M.A. (1998): "Information complexity criteria for regression models", Computational Statistics & Data Analysis, 28, pp. 51-76 <doi: 10.1016/S0167-9473(98)00025-5> \cr
 
-Farlow, S.J. (1981): "The GMDH algorithm of Ivakhnenko", The American Statistician, 35(4), pp. 210-215. <doi:10.2307/2683292> \cr
+Farlow, S.J. (1981): "The GMDH algorithm of Ivakhnenko", The American Statistician, 35(4), pp. 210-215. <doi: 10.2307/2683292> \cr
 
 Hild, Ch. R. and Bozdogan, H. (1995): "The use of information-based model selection criteria in the GMDH algorithm", Systems Analysis Modelling Simulation, 20(1-2), pp. 29-50 \cr
 
-Ivakhnenko A.G. (1968): "The Group Method of Data Handling - A Rival of the Method of Stochastic Approximation", Soviet Automatic Control, 13(3), pp. 43-55 \cr
+Ivakhnenko, A.G. (1968): "The Group Method of Data Handling - A Rival of the Method of Stochastic Approximation", Soviet Automatic Control, 13(3), pp. 43-55 \cr
+
+Müller, J.-A., Ivachnenko, A.G. and Lemke, F. (1998): "GMDH Algorithms for Complex Systems Modelling", Mathematical and Computer Modelling of Dynamical Systems, 4(4), pp. 275-316 <doi: 10.1080/13873959808837083> \cr
 
 Stepashko, V. Bulgakova, O. and Zosimov V. (2018): "Construction and Research of the Generalized Iterative GMDH Algorithm with Active Neurons", Advances in Intelligent Systems and Computing II, pp. 492-510 <doi:10.1007/978-3-319-70581-1_35>
 }

@@ -2,11 +2,11 @@
 % Please edit documentation in R/combi.twice_1.R
 \name{gmdh.combi.twice_1}
 \alias{gmdh.combi.twice_1}
-\title{GMDH COMBI-TWICE auxiliar functions}
+\title{GMDH COMBI-TWICE auxiliar function}
 \usage{
 gmdh.combi.twice_1(X, y, G)
 }
 \description{
-Performs auxiliar tasks to predict.mia
+Build a regression model performing GMDH Twice-Multilayered Combinatorial (TMC) with PRESS criteria.
 }
 \keyword{internal}

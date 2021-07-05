@@ -7,6 +7,6 @@
 gmdh.combi_2(X, y, G = 2, x.test, y.test)
 }
 \description{
-Performs auxiliar tasks to predict.mia
+Build a regression model performing GMDH Combinatorial with external criteria.
 }
 \keyword{internal}

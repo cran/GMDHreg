@@ -17,28 +17,31 @@ fun.svd_3 <- function(x, y) {
 
   Xsvd <- svd(x)
   D <- diag(1 / Xsvd$d)
-  D[which(D < tol)] <- 0
+  D[D <= tol] <- 0
+
   XtX_inv <- Xsvd$v %*% D %*% D %*% t(Xsvd$v)
   C <- XtX_inv %*% crossprod(x, y)
-  # C <- Xsvd$v %*% (crossprod(Xsvd$u, y) / Xsvd$d)
   rownames(C) <- c("Ind", nombres)
 
-  ssr <- sum((x %*% C - y)^2)
-  logL <- -(nrow(x) / 2) * (log(ssr / nrow(x))) - (nrow(x) / 2) * (log(2 * pi)) - (nrow(x) / 2)
-  covmat <- XtX_inv * ssr / (nrow(x) - ncol(x) + 1 - 1)
+  RSS <- sum((x %*% C - y)^2)
+  n <- nrow(x)
+  sigma2 <- RSS / n
+  rank <- ncol(x)
+  k <- rank + 1
 
-  # k <- nrow(covmat)
-  # CV <- as.vector(-2 * c(logL) + k * log(sum(diag(covmat)) / k) - log(det(covmat))) # ICOMP(IFIM)
+  logL <- -(n / 2) * (log(RSS / n)) - (n / 2) * (log(2 * pi)) - (n / 2)
+  covmat <- sigma2 * XtX_inv
 
   lambdas <- eigen(covmat, only.values = TRUE)$values
-  lambda_bar <- mean(lambdas)
-  complexity <- .5 / (lambda_bar * lambda_bar) * sum((lambdas - lambda_bar)^2)
-  CV <- -2 * logL + complexity # ICOMP
+  lambda_m <- mean(lambdas)
+  complexity <- (1 / 2) / (lambda_m * lambda_m) * sum((lambdas - lambda_m)^2)
+  CV <- -2 * logL + complexity
+  CV <- round(CV, digits = 6)
 
   resultado$coef <- C
   resultado$CV <- CV
   class(resultado) <- "svd"
-  rm(list = c("nombres", "x", "y", "Xsvd", "C", "ssr", "CV", "logL", "XtX_inv", "covmat"))
+  rm(list = c("nombres", "x", "y", "Xsvd", "C", "RSS", "CV", "logL", "XtX_inv", "covmat"))
 
   return(resultado)
 }

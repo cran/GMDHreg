@@ -1,3 +1,8 @@
+# GMDHreg 0.2.2 July 2021
+## Major Changes:
+*  Modified internal code to reduce running time
+*  An internal stop criteria is added to reduce running time and improve model stability
+
 # GMDHreg 0.2.1 August 2020
 ## Minor Change:
 Fixed some bugs

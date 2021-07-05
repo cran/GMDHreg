@@ -12,9 +12,19 @@
 
 <meta name="author" content="Manuel Villacorta Tilve" />
 
-<meta name="date" content="2020-08-01" />
+<meta name="date" content="2021-07-05" />
 
 <title>GMDHreg: an R Package for GMDH Regression</title>
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 
 
@@ -35,13 +45,13 @@
 
 <h1 class="title toc-ignore">GMDHreg: an R Package for GMDH Regression</h1>
 <h4 class="author">Manuel Villacorta Tilve</h4>
-<h4 class="date">2020-08-01</h4>
+<h4 class="date">2021-07-05</h4>
 
 
 
 <div id="introduction." class="section level1">
 <h1>Introduction.</h1>
-<p>GMDH (Group Method of Data Handling) was originated in 1968 by Prof. Alexey G. Ivakhnenko in the Institute of Cybernetics in Kiev.</p>
+<p>GMDH (Group Method of Data Handling) was originated in 1968 by Prof. Alexey G. Ivakhnenko in the Institute of Cybernetics in Kiev.</p>
 <p>GMDHreg has been designed for regression analysis. For this porpouse, it includes the next algorithms: Combinatorial, MIA (Multilayered Iterative Algorithm), Combinatorial with Active Neurons, and GIA (Generalized Iterative Algorithm).</p>
 <p>Following a heuristic and Perceptron type approach, Ivakhnenko attempted to resemble the Kolmogorov-Gabor polynomial by using low order polynomials. GMDH performs sorting-out of gradually complicated polynomial models and selecting the best solution using so called <em>external criteria</em>. So that, GMDH algorithms give us the possibility to find automatically interrelations in data, to select an optimal structure of model or network, by means of this external criteria.</p>
 <p>To estimate the polynomials coefficients, it is used the least squares method. In this aspect, GMDHreg employs Singular Value Decomposition (SVD) to avoid singularities.</p>
@@ -96,7 +106,7 @@ error.combi &lt;- summary(abs(fit.combi - y.val) / y.val)
 <div id="gmdh-combinatorial-with-active-neurons.-gmdh-twice-multilayered-combinatorial-gmdh-tmc." class="section level1">
 <h1>GMDH Combinatorial with Active Neurons. GMDH Twice-Multilayered Combinatorial (GMDH-TMC).</h1>
 <p>It is an extension of Combinatorial algorithm. It constructs the first layer of neurons in the network like GMDH-COMBI. Then, the algorithm determines how accurate the predictions will be for all neurons.</p>
-<p>At a second stage, with <span class="math inline">\(M_2\)</span> best neurons as regressors, GMDH-TMC repeats the proces for a second, a third,… {i} layer, as long as this decreases external criteria value.</p>
+<p>At a second stage, with <span class="math inline">\(M_2\)</span> best neurons as regressors, GMDH-TMC repeats the proces for a second, a third,... {i} layer, as long as this decreases external criteria value.</p>
 <p>At GMDHreg, <span class="math inline">\(M_i = M\)</span>, and it does not implement the orginal idea of Ivakhnenko who introduces a feed-forward system. Note that this is computationally very expensive, especially if G = 2.</p>
 <pre><code>mod.combi.twice &lt;- gmdh.combi.twice(X = x.train, y = y.train, criteria = &quot;PRESS&quot;, G = 2)
 fit.combi.twice &lt;- predict(mod.combi.twice, x.val)
@@ -109,7 +119,7 @@ error.combi.twice &lt;- summary(abs(fit.combi.twice - y.val) / y.val)
 <p><span class="math inline">\(y_{i} = \beta_{0} + \beta_{1}x_{1,i} + \beta_{2}x_{2,i} + \beta_{3}x_{1,i}^2 + \beta_{4}x_{2,i}^2 + \beta_{5}x_{1,i}x_{2,i}\)</span></p>
 <p>where coefficients <span class="math inline">\(\beta_i\)</span> are determined by linear regression and are unique for each neuron.</p>
 <p>The network of polynomials is constructed one layer at a time. The first network layer consists of the functions of each possible pair of <span class="math inline">\(n\)</span> input variables resulting in <span class="math inline">\(n(n−1)/2\)</span> neurons. The second layer is created using inputs from the first layer and so on.</p>
-<p>Due to the exponential neurons growth, after finishing the layer, a limited number of best neurons is selected and the other neurons are removed from the network. GMDH-MIA repeat the proces for third, fourth,… layer, as long as decreases external criterion value.</p>
+<p>Due to the exponential neurons growth, after finishing the layer, a limited number of best neurons is selected and the other neurons are removed from the network. GMDH-MIA repeat the proces for third, fourth,... layer, as long as decreases external criterion value.</p>
 <pre><code>mod.mia &lt;- gmdh.mia(X = x.train, y = y.train, prune = 150, criteria = &quot;PRESS&quot;)
 fit.mia &lt;- predict(mod.mia, x.val)
 error.mia &lt;- summary(abs(fit.mia - y.val) / y.val)

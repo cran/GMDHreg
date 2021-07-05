@@ -4,7 +4,6 @@
 #'
 #' @param object An object model from fun.svd an object class 'svd'
 #' @param newdata matrix containing dependent variable in the model, wich the predictions are calculated.
-
 #'
 #' @return NULL
 #'

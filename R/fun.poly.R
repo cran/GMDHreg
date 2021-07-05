@@ -19,16 +19,15 @@ fun.poly <- function(X, G = 2) {
   nombres.par <- combn(nombres.or, 2)
   nombres.par <- apply(nombres.par, 2, function(x){paste(x[1], "*", x[2], sep = "")})
 
-  var <- combn(c(1:ncol(X)), 2)
-  pares <- apply(var, 2, function(x){I(X[,x[1]]) * I(X[,x[2]])})
+  .var <- combn(c(1:ncol(X)), 2)
+  pares <- apply(.var, 2, function(x){I(X[,x[1]]) * I(X[,x[2]])})
   colnames(pares) <- nombres.par
 
   ifelse(G == 1, return(cbind(X, pares)), NA)
 
   X.sq <- matrix(data = I(X^2), nrow = nrow(X), ncol = ncol(X))
   colnames(X.sq) <- paste(nombres.or, "^", "2", sep = "")
-  BD <- cbind(X, X.sq, pares)
 
-  ifelse(G == 2, return(BD), NA)
+  ifelse(G == 2, return(cbind(X, X.sq, pares)), NA)
 
 }

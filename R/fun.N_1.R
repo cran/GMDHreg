@@ -17,12 +17,13 @@ fun.N_1 <- function(x, y) {
 
   Xsvd <- svd(x)
   D <- 1 / Xsvd$d
-  D[which(D < tol)] <- 0
+  D[D <= tol] <- 0
   C <- Xsvd$v %*% (crossprod(Xsvd$u, y) * D)
-  err <- (x %*% C) - y
   rownames(C) <- c("Ind", nombres, paste0(nombres, "^2", sep = ""), "interac")
 
+  err <- (x %*% C) - y
   CV <- sqrt(mean((err / (1 - rowSums(Xsvd$u * Xsvd$u)))^2))
+  CV <- round(CV, digits = 6)
 
   resultado$coef <- C
   resultado$CV <- CV

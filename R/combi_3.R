@@ -1,6 +1,6 @@
 #' @title GMDH COMBI auxiliar functions
 #'
-#' @description Performs auxiliar tasks to predict.mia
+#' @description Build a regression model performing GMDH Combinatorial with ICOMP criteria.
 #'
 #' @keywords internal
 #'
@@ -9,6 +9,7 @@ gmdh.combi_3 <- function(X, y, G = 2) {
   results <- vector(mode = "list", length = 2)
   names(results) <- c("results", "G")
   regressors <- fun.poly(X, G = G)
+  regressors <- fun.filter(regressors)
 
   combs <- do.call(expand.grid, rep(list(c(FALSE, TRUE)), ncol(regressors)))[-1, ]
 
