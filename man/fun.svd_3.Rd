@@ -7,9 +7,9 @@
 fun.svd_3(x, y)
 }
 \arguments{
-\item{y}{vector or matrix containing dependent variable in the model.}
+\item{x}{matrix containing independent variables in the model.}
 
-\item{X}{matrix containing independent variables in the model.}
+\item{y}{vector or matrix containing dependent variable in the model.}
 }
 \description{
 Calculates svd regression.

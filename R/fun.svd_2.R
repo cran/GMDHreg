@@ -2,7 +2,7 @@
 #'
 #' @description Calculates svd regression.
 #'
-#' @param X matrix containing independent variables in the model.
+#' @param x matrix containing independent variables in the model.
 #' @param y vector or matrix containing dependent variable in the model.
 #'
 #' @keywords internal
